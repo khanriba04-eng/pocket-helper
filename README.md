@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # PocketHelper
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.15.
@@ -57,3 +58,6 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+=======
+# pocket-helper
+>>>>>>> 157ce5939ad873f2f6e5adc8a56227b5907d4c71
