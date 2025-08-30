@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pocket Helper</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fdfcfb;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, #a5dee5, #fbc2eb);
+      padding: 20px;
+      color: #333;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* Navbar */
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    nav a:hover {
+      background: rgba(255,255,255,0.6);
+    }
+
+    /* Top-right buttons */
+    .header-buttons {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .header-buttons button {
+      padding: 6px 12px;
+      background: #fff;
+      color: #333;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: background 0.3s, transform 0.2s;
+    }
+    .header-buttons button:hover {
+      background: #eee;
+      transform: scale(1.05);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    section {
+      display: none;
+    }
+    section.active {
+      display: block;
+    }
+
+    /* Features grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .section {
+      padding: 18px;
+      background-color: #fffafc;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+    h2 {
+      color: #6b5b95;
+      font-size: 18px;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 16px;
+      background: #a5dee5;
+      color: #333;
+      border: none;
+      border-radius: 8px;
+      margin-top: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s, transform 0.2s;
+    }
+    button:hover {
+      background: #7ec8d6;
+      transform: scale(1.05);
+    }
+
+    textarea, input, select {
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      padding: 16px;
+      background: #f9f4f9;
+      color: #555;
+      font-size: 14px;
+      border-top: 1px solid #eee;
+    }
+
+    /* Dark mode */
+    .dark-mode {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+    .dark-mode .section {
+      background: #334155;
+      color: #fff;
+    }
+    .dark-mode header {
+      background: linear-gradient(135deg, #1e293b, #475569);
+      color: #f1f5f9;
+    }
+    .dark-mode footer {
+      background: #273447;
+      color: #cbd5e1
+    }
+
+    /* Contact form */
+    .contact-form {
+      max-width: 600px;
+      margin: auto;
+      background: #fffafc;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    /* Modal overlay */
+    #overlay {
+      display: none;
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 999;
+    }
+    #loginModal {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+      z-index: 1000;
+      max-width: 300px;
+      width: 90%;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📦 Pocket Helper – Real-Life Assistant</h1>
+    <nav>
+      <a href="#" onclick="showSection('home')">Home</a>
+      <a href="#" onclick="showSection('features')">Features</a>
+      <a href="#" onclick="showSection('contact')">Contact Us</a>
+      <a href="#" onclick="showSection('about')">About Us</a>
+    </nav>
+    <div class="header-buttons">
+      <button onclick="alert('Opening Dashboard...')">Dashboard</button>
+      <button onclick="openLogin()">Login</button>
+      <button onclick="toggleDarkMode()">🌙</button>
+    </div>
+  </header>
+
+  <main>
+   <section id="home" class="active">
+  <h2>Welcome to Pocket Helper</h2>
+  <p>Your personal assistant for daily life tasks – from quick letters and messages to health tracking and emergency info. Think of it as your “all-in-one toolkit” for smarter living.</p>
+
+  <h3>🌟 Why Choose Pocket Helper?</h3>
+  <ul>
+    <li>✔ Quick solutions for everyday problems.</li>
+    <li>✔ Smart tools like letter generators, health trackers, and life hacks.</li>
+    <li>✔ Easy-to-use design with both light & dark modes.</li>
+    <li>✔ Completely free and accessible anytime, anywhere.</li>
+  </ul>
+
+  <h3>🚀 What Can You Do Here?</h3>
+  <div class="grid">
+    <div class="section">
+      <h2>✍ Complaint Letters</h2>
+      <p>Generate professional complaint or request letters instantly – whether for school, workplace, or services.</p>
+    </div>
+    <div class="section">
+      <h2>💬 Quick Messages</h2>
+      <p>Need a short and polite message for any situation? Pocket Helper has ready-to-use templates.</p>
+    </div>
+    <div class="section">
+      <h2>🩺 Health Notes</h2>
+      <p>Track your medicines or reminders in seconds. Stay on top of your health, stress-free.</p>
+    </div>
+    <div class="section">
+      <h2>🔥 Emergency Info</h2>
+      <p>Access emergency numbers and safety guidelines at a glance – for peace of mind when it matters most.</p>
+    </div>
+  </div>
+
+  <h3>💡 Our Promise</h3>
+  <p>Pocket Helper is designed to save your time, reduce stress, and make everyday life simpler. Whether you’re a student, professional, or homemaker – we’re here to be your little digital assistant.</p>
+</section>
+
+
+    <section id="features">
+      <input type="text" id="searchBar" placeholder="🔍 Search features...">
+      <div class="grid" id="featuresContainer">
+        <div class="section"><h2>Complaint Letter Generator</h2><textarea placeholder="Write your complaint..."></textarea><button>Generate Letter</button></div>
+        <div class="section"><h2>Quick Messages</h2><textarea placeholder="Type a quick message..."></textarea><button>Send</button></div>
+        <div class="section"><h2>Life Hacks</h2><ul><li>What to do when gas runs out</li><li>Quick stain removal tips</li></ul></div>
+        <div class="section"><h2>Emergency Numbers</h2><ul><li>🚑 Ambulance – 108</li><li>🚓 Police – 100</li><li>🔥 Fire – 101</li></ul></div>
+        <div class="section"><h2>Health Tracker</h2><label>Medicine:</label><input type="text" placeholder="Enter medicine"><button>Save</button></div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact Us</h2>
+      <form class="contact-form">
+        <label>Name:</label>
+        <input type="text" required>
+        <label>Email:</label>
+        <input type="email" required>
+        <label>Message:</label>
+        <textarea rows="4" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+
+<section id="about">
+  <h2>About Us</h2>
+  <p><strong>Pocket Helper</strong> was created with a simple vision – to make everyday life easier by providing quick, smart, and reliable tools at your fingertips. We believe that technology should serve as your personal assistant, helping you save time and energy so you can focus on the things that truly matter.</p>
+
+  <h3>✨ Our Mission</h3>
+  <p>Our mission is to become your go-to companion for solving daily challenges. Whether it’s writing a complaint letter, remembering important health notes, or accessing emergency information, Pocket Helper aims to simplify life in just a few clicks.</p>
+
+  <h3>💡 What We Do</h3>
+  <ul>
+    <li>Generate ready-to-use letters and quick messages.</li>
+    <li>Provide practical life hacks and solutions for everyday problems.</li>
+    <li>Offer essential emergency contacts and safety information.</li>
+    <li>Help track your medicines and personal health notes.</li>
+  </ul>
+
+  <h3>🌱 Our Values</h3>
+  <ul>
+    <li><strong>Accessibility:</strong> Easy to use for everyone, anytime.</li>
+    <li><strong>Reliability:</strong> Accurate and helpful information at your fingertips.</li>
+    <li><strong>Innovation:</strong> Constantly improving with new features and ideas.</li>
+    <li><strong>Care:</strong> Designed with empathy to make your daily life stress-free.</li>
+  </ul>
+
+  <h3>🚀 Our Vision</h3>
+  <p>We want Pocket Helper to grow into a trusted digital companion that supports you in every aspect of life – like a personal assistant in your pocket. From productivity tools to wellness features, our vision is to build a platform that truly adapts to your needs.</p>
+
+  <p><em>With Pocket Helper, you’re never alone in solving life’s little challenges – because every big achievement starts with small steps.</em></p>
+</section>
+
+  </main>
+
+  <footer>
+    <p>💡 Pocket Helper – Your everyday assistant | Built with ❤️</p>
+  </footer>
+
+  <!-- Modal & Overlay -->
+  <div id="overlay"></div>
+  <div id="loginModal">
+    <h2>Login</h2>
+    <label>Username:</label><input type="text"><br><br>
+    <label>Password:</label><input type="password"><br><br>
+    <button onclick="alert('Logging in...')">Submit</button>
+    <button onclick="closeLogin()">Close</button>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll("main section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    function openLogin() {
+      document.getElementById("overlay").style.display = "block";
+      document.getElementById("loginModal").style.display = "block";
+    }
+    function closeLogin() {
+      document.getElementById("overlay").style.display = "none";
+      document.getElementById("loginModal").style.display = "none";
+    }
+
+    // Search filter
+    document.getElementById("searchBar").addEventListener("keyup", function() {
+      let query = this.value.toLowerCase();
+      document.querySelectorAll("#featuresContainer .section").forEach(card => {
+        let text = card.innerText.toLowerCase();
+        card.style.display = text.includes(query) ? "block" : "none";
+      });
+    });
+  </script>
+</body>
+</html>
