@@ -254,14 +254,83 @@
 
 
     <section id="features">
-      <input type="text" id="searchBar" placeholder="🔍 Search features...">
-      <div class="grid" id="featuresContainer">
-        <div class="section"><h2>Complaint Letter Generator</h2><textarea placeholder="Write your complaint..."></textarea><button>Generate Letter</button></div>
-        <div class="section"><h2>Quick Messages</h2><textarea placeholder="Type a quick message..."></textarea><button>Send</button></div>
-        <div class="section"><h2>Life Hacks</h2><ul><li>What to do when gas runs out</li><li>Quick stain removal tips</li></ul></div>
-        <div class="section"><h2>Emergency Numbers</h2><ul><li>🚑 Ambulance – 108</li><li>🚓 Police – 100</li><li>🔥 Fire – 101</li></ul></div>
-        <div class="section"><h2>Health Tracker</h2><label>Medicine:</label><input type="text" placeholder="Enter medicine"><button>Save</button></div>
-      </div>
+     <input type="text" id="searchBar" placeholder="🔍 Search features...">
+<div class="grid" id="featuresContainer">
+  <!-- Quick Message Generator -->
+  <div class="section searchable">
+    <h2>Quick WhatsApp Message</h2>
+    <select id="messageType">
+      <option value="birthday">Politely Decline Birthday Invitation</option>
+      <option value="shop_reply">Shop Reply to Customer</option>
+    </select>
+    <button onclick="generateMessage()">Generate</button>
+    <textarea id="messageOutput" placeholder="Your message will appear here..."></textarea>
+  </div>
+
+  <!-- Complaint Letter Generator -->
+  <div class="section searchable">
+    <h2>Complaint Letter Generator</h2>
+    <select id="letterType">
+      <option value="electricity">Electricity Overbilling Complaint</option>
+      <option value="landlord">Landlord Complaint (Leakage)</option>
+    </select>
+    <button onclick="generateLetter()">Generate</button>
+    <textarea id="letterOutput" placeholder="Letter will be shown here..."></textarea>
+  </div>
+
+  <!-- Life Hacks -->
+  <div class="section searchable">
+    <h2>Life Hacks / Emergency Tips</h2>
+    <select id="hackType">
+      <option value="gas">Gas Cylinder Leak</option>
+      <option value="water">Water Leakage</option>
+      <option value="fire">Fire Safety</option>
+      <option value="electric">Electrical Hazard</option>
+      <option value="stain">Stain Removal</option>
+      <option value="wifi_boost">Wi-Fi Boost</option>
+    </select>
+    <button onclick="showHack()">Show Tip</button>
+    <textarea id="hackOutput" placeholder="Solution will be shown here..."></textarea>
+  </div>
+
+  <!-- Motivational Quote -->
+  <div class="section searchable">
+    <h2>Daily Motivational Quote 🌟</h2>
+    <p id="quote">Click below to get inspired 💡</p>
+    <button onclick="showQuote()">Show Quote</button>
+  </div>
+
+  <!-- Health Tracker -->
+  <div class="section searchable">
+    <h2>Health & Medicine Tracker ❤️</h2>
+    <input id="healthLog" type="text" placeholder="Enter BP/Sugar/Medicine info">
+    <button onclick="saveHealth()">Save Log</button>
+    <p id="healthData"></p>
+  </div>
+
+  <!-- Notes Pad -->
+  <div class="section searchable">
+    <h2>Notes Pad 📝</h2>
+    <textarea id="notes" placeholder="Write your notes..."></textarea>
+    <button onclick="saveNotes()">Save Notes</button>
+    <p id="savedNotes"></p>
+  </div>
+
+  <!-- Reminder -->
+  <div class="section searchable">
+    <h2>Reminder / Alarm ⏰</h2>
+    <input type="time" id="reminderTime">
+    <button onclick="setReminder()">Set Reminder</button>
+  </div>
+
+  <!-- Unit Converter -->
+  <div class="section searchable">
+    <h2>Unit Converter 📏</h2>
+    <input id="cmInput" type="number" placeholder="Enter cm">
+    <button onclick="convertCm()">Convert to Inches</button>
+    <p id="conversionResult"></p>
+  </div>
+</div>
     </section>
 
     <section id="contact">
@@ -349,6 +418,133 @@
         card.style.display = text.includes(query) ? "block" : "none";
       });
     });
+
+// ✉️ Generate Quick WhatsApp Message
+function generateMessage() {
+  const type = document.getElementById('messageType').value;
+  let msg = "";
+
+  if (type === "birthday") {
+    msg = "Hey! Thank you so much for the invite. I won’t be able to make it this time, but I wish you a fantastic celebration! 🎉";
+  } else if (type === "shop_reply") {
+    msg = "Thank you for reaching out! Your request has been received. We will get back to you shortly. – Patanwala Dairy";
+  }
+
+  document.getElementById('messageOutput').value = msg;
+}
+
+// 📝 Generate Complaint Letter
+function generateLetter() {
+  const type = document.getElementById('letterType').value;
+  let letter = "";
+
+  if (type === "electricity") {
+    letter = "Subject: Complaint Regarding Excessive Electricity Bill\n\nDear Sir/Madam,\n\nI am writing to bring to your attention the high electricity bill I received this month. This is the third time this issue has occurred. I request an inspection of the meter and a resolution at the earliest.\n\nSincerely,\nYour Name";
+  } else if (type === "landlord") {
+    letter = "Subject: Urgent Maintenance Request\n\nDear Landlord,\n\nI am experiencing water leakage in my flat which is damaging the walls and furniture. Please send someone to fix this immediately.\n\nThank you,\nYour Tenant";
+  }
+
+  document.getElementById('letterOutput').value = letter;
+}
+
+// 🧠 Show Life Hack Tip
+function showHack() {
+  const type = document.getElementById('hackType').value;
+  let tip = "";
+
+  if (type === "gas") {
+    tip = "Turn off the main gas valve. Do not light any flame or use electric switches. Open windows and call your gas supplier immediately.";
+  } else if (type === "water") {
+    tip = "Shut off the main water supply. Use buckets or towels to control flooding. Call a plumber quickly.";
+  } else if (type === "fire") {
+    tip = "Use a fire extinguisher if safe. Evacuate immediately and call emergency services. Never use water on electrical fires.";
+  } else if (type === "electrical") {
+    tip = "Turn off the main power. Avoid touching exposed wires. Call a certified electrician.";
+  } else if (type === "stain") {
+    tip = "Use baking soda and vinegar for quick stain removal on clothes or surfaces.";
+  }  else if (type === "wifi_boost") {
+  tip = "Place your router high and central. Avoid placing it near metal or thick walls.";
+}else {
+    tip = "No tip available for this category.";
+}
+
+  document.getElementById('hackOutput').value = tip;
+}
+
+// 📍 Search Nearby Places
+function searchNearby() {
+  const type = document.getElementById('placeType').value;
+  let query = type === "plumber" ? "Plumber near me" : "ATM near me";
+  const url = "https://www.google.com/maps/search/" + encodeURIComponent(query);
+  window.open(url, "_blank");
+}
+
+// 🌟 Show Motivational Quote
+const quotes = [
+  "🌟 Believe you can and you're halfway there.",
+  "💪 Push yourself, because no one else will do it for you.",
+  "🚀 Dream it. Wish it. Do it.",
+  "🔥 Don’t stop until you’re proud."
+];
+function showQuote() {
+  let random = quotes[Math.floor(Math.random() * quotes.length)];
+  document.getElementById("quote").innerText = random;
+}
+
+// ❤️ Save Health Log
+function saveHealth() {
+  let entry = document.getElementById("healthLog").value;
+  localStorage.setItem("healthLog", entry);
+  document.getElementById("healthData").innerText = "Last Log: " + entry;
+}
+document.getElementById("healthData").innerText = "Last Log: " + (localStorage.getItem("healthLog") || "None");
+
+// 📞 Add Emergency Contact
+function addContact() {
+  let name = document.getElementById("contactName").value;
+  let number = document.getElementById("contactNumber").value;
+
+  if (name && number) {
+    let li = document.createElement("li");
+    li.innerHTML = `<a href="tel:${number}">${name} - ${number}</a>`;
+    document.getElementById("contactsList").appendChild(li);
+  }
+}
+
+// ⏰ Set Reminder
+function setReminder() {
+  let time = document.getElementById("reminderTime").value;
+  if (!time) return alert("Please set a time!");
+  alert("Reminder set for " + time + " ⏰");
+}
+
+// 📏 Convert cm to inches
+function convertCm() {
+  let cm = document.getElementById("cmInput").value;
+  let inches = (cm / 2.54).toFixed(2);
+  document.getElementById("conversionResult").innerText = cm + " cm = " + inches + " inches";
+}
+
+// 📝 Save Notes
+function saveNotes() {
+  let note = document.getElementById("notes").value;
+  localStorage.setItem("notes", note);
+  document.getElementById("savedNotes").innerText = "Saved: " + note;
+}
+document.getElementById("savedNotes").innerText = "Saved: " + (localStorage.getItem("notes") || "No notes yet");
+
+// 🔍 Search Filter
+document.getElementById("searchBar").addEventListener("input", function () {
+  let filter = this.value.toLowerCase();
+  let items = document.querySelectorAll(".searchable");
+  items.forEach(card => {
+    let text = card.innerText.toLowerCase();
+    card.style.display = text.includes(filter) ? "block" : "none";
+  });
+});
   </script>
+
+   <app-root></app-root>
+
 </body>
 </html>
