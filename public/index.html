@@ -209,13 +209,31 @@
       <a href="#" onclick="showSection('about')">About Us</a>
     </nav>
     <div class="header-buttons">
-      <button onclick="alert('Opening Dashboard...')">Dashboard</button>
+     <button onclick="showSection('dashboard'); updateDashboard();">Dashboard</button>
       <button onclick="openLogin()">Login</button>
       <button onclick="toggleDarkMode()">🌙</button>
     </div>
   </header>
 
   <main>
+    <section id="dashboard">
+  <h2>Dashboard 🏠</h2>
+  
+  <h3>Quick Access</h3>
+  <ul>
+    <li><a href="#" onclick="showSection('features')">Features</a></li>
+    <li><a href="#" onclick="showSection('contact')">Contact Us</a></li>
+    <li><a href="#" onclick="showSection('about')">About Us</a></li>
+  </ul>
+
+  <h3>Saved Data Overview</h3>
+  <p><strong>Last Health Log:</strong> <span id="dashboardHealth"></span></p>
+  <p><strong>Last Note Saved:</strong> <span id="dashboardNotes"></span></p>
+
+  <h3>Motivation</h3>
+  <p id="dashboardQuote"></p>
+</section>
+
    <section id="home" class="active">
   <h2>Welcome to Pocket Helper</h2>
   <p>Your personal assistant for daily life tasks – from quick letters and messages to health tracking and emergency info. Think of it as your “all-in-one toolkit” for smarter living.</p>
@@ -264,6 +282,7 @@
       <option value="shop_reply">Shop Reply to Customer</option>
     </select>
     <button onclick="generateMessage()">Generate</button>
+    <button onclick="clearMessage()">Clear</button> 
     <textarea id="messageOutput" placeholder="Your message will appear here..."></textarea>
   </div>
 
@@ -273,8 +292,13 @@
     <select id="letterType">
       <option value="electricity">Electricity Overbilling Complaint</option>
       <option value="landlord">Landlord Complaint (Leakage)</option>
+      <option value="schoolLeave">School Leave Application</option>
+    <option value="jobApplication">Job Application</option>
+    <option value="bankRequest">Request for Bank Statement</option>
+    <option value="friendInvitation">Invitation to a Friend</option>
     </select>
     <button onclick="generateLetter()">Generate</button>
+    <button onclick="clearLetter()">Clear</button> 
     <textarea id="letterOutput" placeholder="Letter will be shown here..."></textarea>
   </div>
 
@@ -290,6 +314,7 @@
       <option value="wifi_boost">Wi-Fi Boost</option>
     </select>
     <button onclick="showHack()">Show Tip</button>
+    <button onclick="clearHack()">Clear</button> 
     <textarea id="hackOutput" placeholder="Solution will be shown here..."></textarea>
   </div>
 
@@ -305,6 +330,7 @@
     <h2>Health & Medicine Tracker ❤️</h2>
     <input id="healthLog" type="text" placeholder="Enter BP/Sugar/Medicine info">
     <button onclick="saveHealth()">Save Log</button>
+    <button onclick="clearHealth()">Clear</button>
     <p id="healthData"></p>
   </div>
 
@@ -313,6 +339,7 @@
     <h2>Notes Pad 📝</h2>
     <textarea id="notes" placeholder="Write your notes..."></textarea>
     <button onclick="saveNotes()">Save Notes</button>
+    <button onclick="clearNotes()">Clear</button>
     <p id="savedNotes"></p>
   </div>
 
@@ -321,6 +348,7 @@
     <h2>Reminder / Alarm ⏰</h2>
     <input type="time" id="reminderTime">
     <button onclick="setReminder()">Set Reminder</button>
+    <button onclick="clearReminder()">Clear</button> 
   </div>
 
   <!-- Unit Converter -->
@@ -328,6 +356,7 @@
     <h2>Unit Converter 📏</h2>
     <input id="cmInput" type="number" placeholder="Enter cm">
     <button onclick="convertCm()">Convert to Inches</button>
+    <button onclick="clearConversion()">Clear</button> 
     <p id="conversionResult"></p>
   </div>
 </div>
@@ -387,11 +416,38 @@
     <h2>Login</h2>
     <label>Username:</label><input type="text"><br><br>
     <label>Password:</label><input type="password"><br><br>
-    <button onclick="alert('Logging in...')">Submit</button>
+    <button onclick="validateLogin()">Submit</button>
     <button onclick="closeLogin()">Close</button>
   </div>
 
   <script>
+
+    function updateDashboard() {
+  document.getElementById('dashboardHealth').innerText = localStorage.getItem("healthLog") || "No logs yet";
+  document.getElementById('dashboardNotes').innerText = localStorage.getItem("notes") || "No notes yet";
+  // Show a random motivational quote
+  document.getElementById('dashboardQuote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+}
+
+    // 🔐 Validate Login Form
+function validateLogin() {
+  const username = document.querySelector("#loginModal input[type='text']").value.trim();
+  const password = document.querySelector("#loginModal input[type='password']").value.trim();
+
+  if (!username || !password) {
+    alert("Please enter both username and password!");
+    return;
+  }
+
+  if (password.length < 4) {
+    alert("Password must be at least 4 characters long!");
+    return;
+  }
+
+  alert("Login successful ✅");
+  closeLogin();
+}
+
     function showSection(id) {
       document.querySelectorAll("main section").forEach(sec => sec.classList.remove("active"));
       document.getElementById(id).classList.add("active");
@@ -409,6 +465,7 @@
       document.getElementById("overlay").style.display = "none";
       document.getElementById("loginModal").style.display = "none";
     }
+    
 
     // Search filter
     document.getElementById("searchBar").addEventListener("keyup", function() {
@@ -432,20 +489,102 @@ function generateMessage() {
 
   document.getElementById('messageOutput').value = msg;
 }
+function clearMessage() {
+  document.getElementById('messageOutput').value = '';
+  document.getElementById('messageType').selectedIndex = 0;
+}
+
 
 // 📝 Generate Complaint Letter
 function generateLetter() {
   const type = document.getElementById('letterType').value;
   let letter = "";
+  switch (type) {
+        case "electricity":
+          letter = `Subject: Complaint Regarding Excessive Electricity Bill
 
-  if (type === "electricity") {
-    letter = "Subject: Complaint Regarding Excessive Electricity Bill\n\nDear Sir/Madam,\n\nI am writing to bring to your attention the high electricity bill I received this month. This is the third time this issue has occurred. I request an inspection of the meter and a resolution at the earliest.\n\nSincerely,\nYour Name";
-  } else if (type === "landlord") {
-    letter = "Subject: Urgent Maintenance Request\n\nDear Landlord,\n\nI am experiencing water leakage in my flat which is damaging the walls and furniture. Please send someone to fix this immediately.\n\nThank you,\nYour Tenant";
-  }
+Dear Sir/Madam,
+
+I am writing to bring to your attention the unusually high electricity bill I received this month. This is the third consecutive time this issue has occurred. Kindly arrange for an inspection of the meter and resolve the matter at your earliest convenience.
+
+Sincerely,
+Your Name`;
+          break;
+
+        case "landlord":
+          letter = `Subject: Urgent Maintenance Request
+
+Dear Landlord,
+
+I am experiencing a severe water leakage in my apartment, which is damaging the walls and furniture. I kindly request you to send someone to fix it as soon as possible.
+
+Thank you,
+Your Tenant`;
+          break;
+
+        case "schoolLeave":
+          letter = `Subject: Leave Application
+
+Dear Class Teacher,
+
+I am writing to inform you that I am unwell and will not be able to attend school for the next three days. Kindly grant me leave from [start date] to [end date].
+
+Thank you for your understanding.
+
+Yours obediently,
+[Your Name]
+[Class & Section]`;
+          break;
+
+        case "jobApplication":
+          letter = `Subject: Application for the Post of [Job Title]
+
+Dear Hiring Manager,
+
+I am writing to apply for the position of [Job Title] as advertised. I believe my qualifications and experience make me a strong candidate for this role. I have attached my resume for your reference.
+
+I would appreciate the opportunity to discuss how I can contribute to your organization.
+
+Sincerely,
+[Your Name]
+[Your Contact Information]`;
+          break;
+
+        case "bankRequest":
+          letter = `Subject: Request for Bank Statement
+
+Dear Branch Manager,
+
+I would like to request a copy of my bank statement for the period from [start date] to [end date] for my account number [XXXXXX]. Please let me know if any formalities or charges apply.
+
+Thank you for your assistance.
+
+Yours faithfully,
+[Your Name]
+[Account Number]
+[Contact Details]`;
+          break;
+
+        case "friendInvitation":
+          letter = `Hey [Friend’s Name],
+
+Hope you’re doing great! I’m throwing a small get-together at my place on [Date] and would love for you to join. It’s been ages since we caught up, so don’t miss it!
+
+See you soon!
+[Your Name]`;
+          break;
+
+        default:
+          letter = "Please select a valid letter type.";
+      }
 
   document.getElementById('letterOutput').value = letter;
 }
+function clearLetter() {
+  document.getElementById('letterOutput').value = '';
+  document.getElementById('letterType').selectedIndex = 0;
+}
+
 
 // 🧠 Show Life Hack Tip
 function showHack() {
@@ -470,6 +609,11 @@ function showHack() {
 
   document.getElementById('hackOutput').value = tip;
 }
+function clearHack() {
+  document.getElementById('hackOutput').value = '';
+  document.getElementById('hackType').selectedIndex = 0;
+}
+
 
 // 📍 Search Nearby Places
 function searchNearby() {
@@ -499,6 +643,12 @@ function saveHealth() {
 }
 document.getElementById("healthData").innerText = "Last Log: " + (localStorage.getItem("healthLog") || "None");
 
+function clearHealth() {
+  document.getElementById('healthLog').value = '';
+  document.getElementById('healthData').innerText = '';
+}
+
+
 // 📞 Add Emergency Contact
 function addContact() {
   let name = document.getElementById("contactName").value;
@@ -517,6 +667,10 @@ function setReminder() {
   if (!time) return alert("Please set a time!");
   alert("Reminder set for " + time + " ⏰");
 }
+function clearReminder() {
+  document.getElementById('reminderTime').value = '';
+}
+
 
 // 📏 Convert cm to inches
 function convertCm() {
@@ -525,6 +679,12 @@ function convertCm() {
   document.getElementById("conversionResult").innerText = cm + " cm = " + inches + " inches";
 }
 
+function clearConversion() {
+  document.getElementById('cmInput').value = '';
+  document.getElementById('conversionResult').innerText = '';
+}
+
+
 // 📝 Save Notes
 function saveNotes() {
   let note = document.getElementById("notes").value;
@@ -532,6 +692,11 @@ function saveNotes() {
   document.getElementById("savedNotes").innerText = "Saved: " + note;
 }
 document.getElementById("savedNotes").innerText = "Saved: " + (localStorage.getItem("notes") || "No notes yet");
+
+function clearNotes() {
+  document.getElementById('notes').value = '';
+  document.getElementById('savedNotes').innerText = '';
+}
 
 // 🔍 Search Filter
 document.getElementById("searchBar").addEventListener("input", function () {
