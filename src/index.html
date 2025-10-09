@@ -1,13 +1,715 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>PocketHelper</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pocket Helper</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fdfcfb;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, #a5dee5, #fbc2eb);
+      padding: 20px;
+      color: #333;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* Navbar */
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    nav a:hover {
+      background: rgba(255,255,255,0.6);
+    }
+
+    /* Top-right buttons */
+    .header-buttons {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .header-buttons button {
+      padding: 6px 12px;
+      background: #fff;
+      color: #333;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: background 0.3s, transform 0.2s;
+    }
+    .header-buttons button:hover {
+      background: #eee;
+      transform: scale(1.05);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    section {
+      display: none;
+    }
+    section.active {
+      display: block;
+    }
+
+    /* Features grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .section {
+      padding: 18px;
+      background-color: #fffafc;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+    h2 {
+      color: #6b5b95;
+      font-size: 18px;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 16px;
+      background: #a5dee5;
+      color: #333;
+      border: none;
+      border-radius: 8px;
+      margin-top: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s, transform 0.2s;
+    }
+    button:hover {
+      background: #7ec8d6;
+      transform: scale(1.05);
+    }
+
+    textarea, input, select {
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      padding: 16px;
+      background: #f9f4f9;
+      color: #555;
+      font-size: 14px;
+      border-top: 1px solid #eee;
+    }
+
+    /* Dark mode */
+    .dark-mode {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+    .dark-mode .section {
+      background: #334155;
+      color: #fff;
+    }
+    .dark-mode header {
+      background: linear-gradient(135deg, #1e293b, #475569);
+      color: #f1f5f9;
+    }
+    .dark-mode footer {
+      background: #273447;
+      color: #cbd5e1
+    }
+
+    /* Contact form */
+    .contact-form {
+      max-width: 600px;
+      margin: auto;
+      background: #fffafc;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    /* Modal overlay */
+    #overlay {
+      display: none;
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 999;
+    }
+    #loginModal {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+      z-index: 1000;
+      max-width: 300px;
+      width: 90%;
+    }
+  </style>
 </head>
 <body>
-  <app-root></app-root>
+
+  <header>
+    <h1>📦 Pocket Helper – Real-Life Assistant</h1>
+    <nav>
+      <a href="#" onclick="showSection('home')">Home</a>
+      <a href="#" onclick="showSection('features')">Features</a>
+      <a href="#" onclick="showSection('contact')">Contact Us</a>
+      <a href="#" onclick="showSection('about')">About Us</a>
+    </nav>
+    <div class="header-buttons">
+     <button onclick="showSection('dashboard'); updateDashboard();">Dashboard</button>
+      <button onclick="openLogin()">Login</button>
+      <button onclick="toggleDarkMode()">🌙</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="dashboard">
+  <h2>Dashboard 🏠</h2>
+  
+  <h3>Quick Access</h3>
+  <ul>
+    <li><a href="#" onclick="showSection('features')">Features</a></li>
+    <li><a href="#" onclick="showSection('contact')">Contact Us</a></li>
+    <li><a href="#" onclick="showSection('about')">About Us</a></li>
+  </ul>
+
+  <h3>Saved Data Overview</h3>
+  <p><strong>Last Health Log:</strong> <span id="dashboardHealth"></span></p>
+  <p><strong>Last Note Saved:</strong> <span id="dashboardNotes"></span></p>
+
+  <h3>Motivation</h3>
+  <p id="dashboardQuote"></p>
+</section>
+
+   <section id="home" class="active">
+  <h2>Welcome to Pocket Helper</h2>
+  <p>Your personal assistant for daily life tasks – from quick letters and messages to health tracking and emergency info. Think of it as your “all-in-one toolkit” for smarter living.</p>
+
+  <h3>🌟 Why Choose Pocket Helper?</h3>
+  <ul>
+    <li>✔ Quick solutions for everyday problems.</li>
+    <li>✔ Smart tools like letter generators, health trackers, and life hacks.</li>
+    <li>✔ Easy-to-use design with both light & dark modes.</li>
+    <li>✔ Completely free and accessible anytime, anywhere.</li>
+  </ul>
+
+  <h3>🚀 What Can You Do Here?</h3>
+  <div class="grid">
+    <div class="section">
+      <h2>✍ Complaint Letters</h2>
+      <p>Generate professional complaint or request letters instantly – whether for school, workplace, or services.</p>
+    </div>
+    <div class="section">
+      <h2>💬 Quick Messages</h2>
+      <p>Need a short and polite message for any situation? Pocket Helper has ready-to-use templates.</p>
+    </div>
+    <div class="section">
+      <h2>🩺 Health Notes</h2>
+      <p>Track your medicines or reminders in seconds. Stay on top of your health, stress-free.</p>
+    </div>
+    <div class="section">
+      <h2>🔥 Emergency Info</h2>
+      <p>Access emergency numbers and safety guidelines at a glance – for peace of mind when it matters most.</p>
+    </div>
+  </div>
+
+  <h3>💡 Our Promise</h3>
+  <p>Pocket Helper is designed to save your time, reduce stress, and make everyday life simpler. Whether you’re a student, professional, or homemaker – we’re here to be your little digital assistant.</p>
+</section>
+
+
+    <section id="features">
+     <input type="text" id="searchBar" placeholder="🔍 Search features...">
+<div class="grid" id="featuresContainer">
+  <!-- Quick Message Generator -->
+  <div class="section searchable">
+    <h2>Quick WhatsApp Message</h2>
+    <select id="messageType">
+      <option value="birthday">Politely Decline Birthday Invitation</option>
+      <option value="shop_reply">Shop Reply to Customer</option>
+    </select>
+    <button onclick="generateMessage()">Generate</button>
+    <button onclick="clearMessage()">Clear</button> 
+    <textarea id="messageOutput" placeholder="Your message will appear here..."></textarea>
+  </div>
+
+  <!-- Complaint Letter Generator -->
+  <div class="section searchable">
+    <h2>Complaint Letter Generator</h2>
+    <select id="letterType">
+      <option value="electricity">Electricity Overbilling Complaint</option>
+      <option value="landlord">Landlord Complaint (Leakage)</option>
+      <option value="schoolLeave">School Leave Application</option>
+    <option value="jobApplication">Job Application</option>
+    <option value="bankRequest">Request for Bank Statement</option>
+    <option value="friendInvitation">Invitation to a Friend</option>
+    </select>
+    <button onclick="generateLetter()">Generate</button>
+    <button onclick="clearLetter()">Clear</button> 
+    <textarea id="letterOutput" placeholder="Letter will be shown here..."></textarea>
+  </div>
+
+  <!-- Life Hacks -->
+  <div class="section searchable">
+    <h2>Life Hacks / Emergency Tips</h2>
+    <select id="hackType">
+      <option value="gas">Gas Cylinder Leak</option>
+      <option value="water">Water Leakage</option>
+      <option value="fire">Fire Safety</option>
+      <option value="electric">Electrical Hazard</option>
+      <option value="stain">Stain Removal</option>
+      <option value="wifi_boost">Wi-Fi Boost</option>
+    </select>
+    <button onclick="showHack()">Show Tip</button>
+    <button onclick="clearHack()">Clear</button> 
+    <textarea id="hackOutput" placeholder="Solution will be shown here..."></textarea>
+  </div>
+
+  <!-- Motivational Quote -->
+  <div class="section searchable">
+    <h2>Daily Motivational Quote 🌟</h2>
+    <p id="quote">Click below to get inspired 💡</p>
+    <button onclick="showQuote()">Show Quote</button>
+  </div>
+
+  <!-- Health Tracker -->
+  <div class="section searchable">
+    <h2>Health & Medicine Tracker ❤️</h2>
+    <input id="healthLog" type="text" placeholder="Enter BP/Sugar/Medicine info">
+    <button onclick="saveHealth()">Save Log</button>
+    <button onclick="clearHealth()">Clear</button>
+    <p id="healthData"></p>
+  </div>
+
+  <!-- Notes Pad -->
+  <div class="section searchable">
+    <h2>Notes Pad 📝</h2>
+    <textarea id="notes" placeholder="Write your notes..."></textarea>
+    <button onclick="saveNotes()">Save Notes</button>
+    <button onclick="clearNotes()">Clear</button>
+    <p id="savedNotes"></p>
+  </div>
+
+  <!-- Reminder -->
+  <div class="section searchable">
+    <h2>Reminder / Alarm ⏰</h2>
+    <input type="time" id="reminderTime">
+    <button onclick="setReminder()">Set Reminder</button>
+    <button onclick="clearReminder()">Clear</button> 
+  </div>
+
+  <!-- Unit Converter -->
+  <div class="section searchable">
+    <h2>Unit Converter 📏</h2>
+    <input id="cmInput" type="number" placeholder="Enter cm">
+    <button onclick="convertCm()">Convert to Inches</button>
+    <button onclick="clearConversion()">Clear</button> 
+    <p id="conversionResult"></p>
+  </div>
+</div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact Us</h2>
+      <form class="contact-form">
+        <label>Name:</label>
+        <input type="text" required>
+        <label>Email:</label>
+        <input type="email" required>
+        <label>Message:</label>
+        <textarea rows="4" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+
+<section id="about">
+  <h2>About Us</h2>
+  <p><strong>Pocket Helper</strong> was created with a simple vision – to make everyday life easier by providing quick, smart, and reliable tools at your fingertips. We believe that technology should serve as your personal assistant, helping you save time and energy so you can focus on the things that truly matter.</p>
+
+  <h3>✨ Our Mission</h3>
+  <p>Our mission is to become your go-to companion for solving daily challenges. Whether it’s writing a complaint letter, remembering important health notes, or accessing emergency information, Pocket Helper aims to simplify life in just a few clicks.</p>
+
+  <h3>💡 What We Do</h3>
+  <ul>
+    <li>Generate ready-to-use letters and quick messages.</li>
+    <li>Provide practical life hacks and solutions for everyday problems.</li>
+    <li>Offer essential emergency contacts and safety information.</li>
+    <li>Help track your medicines and personal health notes.</li>
+  </ul>
+
+  <h3>🌱 Our Values</h3>
+  <ul>
+    <li><strong>Accessibility:</strong> Easy to use for everyone, anytime.</li>
+    <li><strong>Reliability:</strong> Accurate and helpful information at your fingertips.</li>
+    <li><strong>Innovation:</strong> Constantly improving with new features and ideas.</li>
+    <li><strong>Care:</strong> Designed with empathy to make your daily life stress-free.</li>
+  </ul>
+
+  <h3>🚀 Our Vision</h3>
+  <p>We want Pocket Helper to grow into a trusted digital companion that supports you in every aspect of life – like a personal assistant in your pocket. From productivity tools to wellness features, our vision is to build a platform that truly adapts to your needs.</p>
+
+  <p><em>With Pocket Helper, you’re never alone in solving life’s little challenges – because every big achievement starts with small steps.</em></p>
+</section>
+
+  </main>
+
+  <footer>
+    <p>💡 Pocket Helper – Your everyday assistant | Built with ❤️</p>
+  </footer>
+
+  <!-- Modal & Overlay -->
+  <div id="overlay"></div>
+  <div id="loginModal">
+    <h2>Login</h2>
+    <label>Username:</label><input type="text"><br><br>
+    <label>Password:</label><input type="password"><br><br>
+    <button onclick="validateLogin()">Submit</button>
+    <button onclick="closeLogin()">Close</button>
+  </div>
+
+  <script>
+
+    function updateDashboard() {
+  document.getElementById('dashboardHealth').innerText = localStorage.getItem("healthLog") || "No logs yet";
+  document.getElementById('dashboardNotes').innerText = localStorage.getItem("notes") || "No notes yet";
+  // Show a random motivational quote
+  document.getElementById('dashboardQuote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+}
+
+    // 🔐 Validate Login Form
+function validateLogin() {
+  const username = document.querySelector("#loginModal input[type='text']").value.trim();
+  const password = document.querySelector("#loginModal input[type='password']").value.trim();
+
+  if (!username || !password) {
+    alert("Please enter both username and password!");
+    return;
+  }
+
+  if (password.length < 4) {
+    alert("Password must be at least 4 characters long!");
+    return;
+  }
+
+  alert("Login successful ✅");
+  closeLogin();
+}
+
+    function showSection(id) {
+      document.querySelectorAll("main section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    function openLogin() {
+      document.getElementById("overlay").style.display = "block";
+      document.getElementById("loginModal").style.display = "block";
+    }
+    function closeLogin() {
+      document.getElementById("overlay").style.display = "none";
+      document.getElementById("loginModal").style.display = "none";
+    }
+    
+
+    // Search filter
+    document.getElementById("searchBar").addEventListener("keyup", function() {
+      let query = this.value.toLowerCase();
+      document.querySelectorAll("#featuresContainer .section").forEach(card => {
+        let text = card.innerText.toLowerCase();
+        card.style.display = text.includes(query) ? "block" : "none";
+      });
+    });
+
+// ✉️ Generate Quick WhatsApp Message
+function generateMessage() {
+  const type = document.getElementById('messageType').value;
+  let msg = "";
+
+  if (type === "birthday") {
+    msg = "Hey! Thank you so much for the invite. I won’t be able to make it this time, but I wish you a fantastic celebration! 🎉";
+  } else if (type === "shop_reply") {
+    msg = "Thank you for reaching out! Your request has been received. We will get back to you shortly. – Patanwala Dairy";
+  }
+
+  document.getElementById('messageOutput').value = msg;
+}
+function clearMessage() {
+  document.getElementById('messageOutput').value = '';
+  document.getElementById('messageType').selectedIndex = 0;
+}
+
+
+// 📝 Generate Complaint Letter
+function generateLetter() {
+  const type = document.getElementById('letterType').value;
+  let letter = "";
+  switch (type) {
+        case "electricity":
+          letter = `Subject: Complaint Regarding Excessive Electricity Bill
+
+Dear Sir/Madam,
+
+I am writing to bring to your attention the unusually high electricity bill I received this month. This is the third consecutive time this issue has occurred. Kindly arrange for an inspection of the meter and resolve the matter at your earliest convenience.
+
+Sincerely,
+Your Name`;
+          break;
+
+        case "landlord":
+          letter = `Subject: Urgent Maintenance Request
+
+Dear Landlord,
+
+I am experiencing a severe water leakage in my apartment, which is damaging the walls and furniture. I kindly request you to send someone to fix it as soon as possible.
+
+Thank you,
+Your Tenant`;
+          break;
+
+        case "schoolLeave":
+          letter = `Subject: Leave Application
+
+Dear Class Teacher,
+
+I am writing to inform you that I am unwell and will not be able to attend school for the next three days. Kindly grant me leave from [start date] to [end date].
+
+Thank you for your understanding.
+
+Yours obediently,
+[Your Name]
+[Class & Section]`;
+          break;
+
+        case "jobApplication":
+          letter = `Subject: Application for the Post of [Job Title]
+
+Dear Hiring Manager,
+
+I am writing to apply for the position of [Job Title] as advertised. I believe my qualifications and experience make me a strong candidate for this role. I have attached my resume for your reference.
+
+I would appreciate the opportunity to discuss how I can contribute to your organization.
+
+Sincerely,
+[Your Name]
+[Your Contact Information]`;
+          break;
+
+        case "bankRequest":
+          letter = `Subject: Request for Bank Statement
+
+Dear Branch Manager,
+
+I would like to request a copy of my bank statement for the period from [start date] to [end date] for my account number [XXXXXX]. Please let me know if any formalities or charges apply.
+
+Thank you for your assistance.
+
+Yours faithfully,
+[Your Name]
+[Account Number]
+[Contact Details]`;
+          break;
+
+        case "friendInvitation":
+          letter = `Hey [Friend’s Name],
+
+Hope you’re doing great! I’m throwing a small get-together at my place on [Date] and would love for you to join. It’s been ages since we caught up, so don’t miss it!
+
+See you soon!
+[Your Name]`;
+          break;
+
+        default:
+          letter = "Please select a valid letter type.";
+      }
+
+  document.getElementById('letterOutput').value = letter;
+}
+function clearLetter() {
+  document.getElementById('letterOutput').value = '';
+  document.getElementById('letterType').selectedIndex = 0;
+}
+
+
+// 🧠 Show Life Hack Tip
+function showHack() {
+  const type = document.getElementById('hackType').value;
+  let tip = "";
+
+  if (type === "gas") {
+    tip = "Turn off the main gas valve. Do not light any flame or use electric switches. Open windows and call your gas supplier immediately.";
+  } else if (type === "water") {
+    tip = "Shut off the main water supply. Use buckets or towels to control flooding. Call a plumber quickly.";
+  } else if (type === "fire") {
+    tip = "Use a fire extinguisher if safe. Evacuate immediately and call emergency services. Never use water on electrical fires.";
+  } else if (type === "electrical") {
+    tip = "Turn off the main power. Avoid touching exposed wires. Call a certified electrician.";
+  } else if (type === "stain") {
+    tip = "Use baking soda and vinegar for quick stain removal on clothes or surfaces.";
+  }  else if (type === "wifi_boost") {
+  tip = "Place your router high and central. Avoid placing it near metal or thick walls.";
+}else {
+    tip = "No tip available for this category.";
+}
+
+  document.getElementById('hackOutput').value = tip;
+}
+function clearHack() {
+  document.getElementById('hackOutput').value = '';
+  document.getElementById('hackType').selectedIndex = 0;
+}
+
+
+// 📍 Search Nearby Places
+function searchNearby() {
+  const type = document.getElementById('placeType').value;
+  let query = type === "plumber" ? "Plumber near me" : "ATM near me";
+  const url = "https://www.google.com/maps/search/" + encodeURIComponent(query);
+  window.open(url, "_blank");
+}
+
+// 🌟 Show Motivational Quote
+const quotes = [
+  "🌟 Believe you can and you're halfway there.",
+  "💪 Push yourself, because no one else will do it for you.",
+  "🚀 Dream it. Wish it. Do it.",
+  "🔥 Don’t stop until you’re proud."
+];
+function showQuote() {
+  let random = quotes[Math.floor(Math.random() * quotes.length)];
+  document.getElementById("quote").innerText = random;
+}
+
+// ❤️ Save Health Log
+function saveHealth() {
+  let entry = document.getElementById("healthLog").value;
+  localStorage.setItem("healthLog", entry);
+  document.getElementById("healthData").innerText = "Last Log: " + entry;
+}
+document.getElementById("healthData").innerText = "Last Log: " + (localStorage.getItem("healthLog") || "None");
+
+function clearHealth() {
+  document.getElementById('healthLog').value = '';
+  document.getElementById('healthData').innerText = '';
+}
+
+
+// 📞 Add Emergency Contact
+function addContact() {
+  let name = document.getElementById("contactName").value;
+  let number = document.getElementById("contactNumber").value;
+
+  if (name && number) {
+    let li = document.createElement("li");
+    li.innerHTML = `<a href="tel:${number}">${name} - ${number}</a>`;
+    document.getElementById("contactsList").appendChild(li);
+  }
+}
+
+// ⏰ Set Reminder
+function setReminder() {
+  let time = document.getElementById("reminderTime").value;
+  if (!time) return alert("Please set a time!");
+  alert("Reminder set for " + time + " ⏰");
+}
+function clearReminder() {
+  document.getElementById('reminderTime').value = '';
+}
+
+
+// 📏 Convert cm to inches
+function convertCm() {
+  let cm = document.getElementById("cmInput").value;
+  let inches = (cm / 2.54).toFixed(2);
+  document.getElementById("conversionResult").innerText = cm + " cm = " + inches + " inches";
+}
+
+function clearConversion() {
+  document.getElementById('cmInput').value = '';
+  document.getElementById('conversionResult').innerText = '';
+}
+
+
+// 📝 Save Notes
+function saveNotes() {
+  let note = document.getElementById("notes").value;
+  localStorage.setItem("notes", note);
+  document.getElementById("savedNotes").innerText = "Saved: " + note;
+}
+document.getElementById("savedNotes").innerText = "Saved: " + (localStorage.getItem("notes") || "No notes yet");
+
+function clearNotes() {
+  document.getElementById('notes').value = '';
+  document.getElementById('savedNotes').innerText = '';
+}
+
+// 🔍 Search Filter
+document.getElementById("searchBar").addEventListener("input", function () {
+  let filter = this.value.toLowerCase();
+  let items = document.querySelectorAll(".searchable");
+  items.forEach(card => {
+    let text = card.innerText.toLowerCase();
+    card.style.display = text.includes(filter) ? "block" : "none";
+  });
+});
+  </script>
+
+   <app-root></app-root>
+
 </body>
 </html>
