@@ -216,23 +216,30 @@
   </header>
 
   <main>
-    <section id="dashboard">
-  <h2>Dashboard 🏠</h2>
-  
-  <h3>Quick Access</h3>
-  <ul>
-    <li><a href="#" onclick="showSection('features')">Features</a></li>
-    <li><a href="#" onclick="showSection('contact')">Contact Us</a></li>
-    <li><a href="#" onclick="showSection('about')">About Us</a></li>
-  </ul>
-
-  <h3>Saved Data Overview</h3>
-  <p><strong>Last Health Log:</strong> <span id="dashboardHealth"></span></p>
-  <p><strong>Last Note Saved:</strong> <span id="dashboardNotes"></span></p>
-
-  <h3>Motivation</h3>
-  <p id="dashboardQuote"></p>
-</section>
+  <!-- Dashboard -->
+  <section id="dashboard">
+    <h2>Dashboard 🏠</h2>
+    <h3>Quick Access</h3>
+    <ul>
+      <li><a href="#" onclick="showSection('features')">Features</a></li>
+      <li><a href="#" onclick="showSection('contact')">Contact Us</a></li>
+      <li><a href="#" onclick="showSection('about')">About Us</a></li>
+    </ul>
+    <h3>Saved Data Overview</h3>
+    <p><strong>Last Health Log:</strong> <span id="dashboardHealth"></span></p>
+    <p><strong>Last Note Saved:</strong> <span id="dashboardNotes"></span></p>
+    <h3>Motivation</h3>
+    <p id="dashboardQuote"></p>
+    <h3>Quick Stats</h3>
+    <p>Tasks Pending: <span id="dashboardTasks">0</span></p>
+    <p>Next Reminder: <span id="dashboardReminder">--:--</span></p>
+    <h3>Habits Tracker</h3>
+    <ul>
+      <li>Drink Water: <progress value="0" max="8" id="habitWater"></progress></li>
+      <li>Exercise: <progress value="0" max="1" id="habitExercise"></progress></li>
+      <li>Read: <progress value="0" max="1" id="habitRead"></progress></li>
+    </ul>
+  </section>
 
    <section id="home" class="active">
   <h2>Welcome to Pocket Helper</h2>
@@ -274,6 +281,48 @@
     <section id="features">
      <input type="text" id="searchBar" placeholder="🔍 Search features...">
 <div class="grid" id="featuresContainer">
+  
+    <div class="section searchable">
+  <h2>📅 Calendar</h2>
+  <p id="calendarDate"></p>
+</div>
+
+  <div class="section searchable">
+  <h2>🌤️ Weather Info</h2>
+  <p id="weatherInfo">Click to show location info</p>
+  <button onclick="showWeather()">Show</button>
+</div>
+        <div class="section searchable">
+        <h2>⏱️ Pomodoro Timer</h2>
+        <p id="pomodoroTimer">25:00</p>
+        <button onclick="startPomodoro()">Start</button>
+        <button onclick="pausePomodoro()">Pause</button>
+        <button onclick="resetPomodoro()">Reset</button>
+      </div>
+
+      <!-- BMI Calculator -->
+      <div class="section searchable">
+        <h2>BMI Calculator ⚖️</h2>
+        <input type="number" id="weight" placeholder="Weight in kg">
+        <input type="number" id="height" placeholder="Height in cm">
+        <button onclick="calculateBMI()">Calculate BMI</button>
+        <p id="bmiResult"></p>
+      </div>
+
+      <!-- Countdown Timer -->
+      <div class="section searchable">
+        <h2>⏳ Countdown Timer</h2>
+        <input type="date" id="eventDate">
+        <button onclick="setCountdown()">Set Countdown</button>
+        <p id="countdownTimer"></p>
+      </div>
+  <!-- Voice Notes -->
+      <div class="section searchable">
+        <h2>🎤 Voice Notes</h2>
+        <button onclick="startVoiceNote()">Start Recording</button>
+        <button onclick="stopVoiceNote()">Stop</button>
+        <textarea id="voiceNoteText" placeholder="Your voice note will appear here..."></textarea>
+      </div>
   <!-- Quick Message Generator -->
   <div class="section searchable">
     <h2>Quick WhatsApp Message</h2>
@@ -342,6 +391,13 @@
     <button onclick="clearNotes()">Clear</button>
     <p id="savedNotes"></p>
   </div>
+  
+  <div class="section searchable">
+  <h2>🌞 Daily Affirmation</h2>
+  <p id="affirmationText">Click to get a positive affirmation!</p>
+  <button onclick="showAffirmation()">Show Affirmation</button>
+</div>
+
 
   <!-- Reminder -->
   <div class="section searchable">
@@ -350,6 +406,23 @@
     <button onclick="setReminder()">Set Reminder</button>
     <button onclick="clearReminder()">Clear</button> 
   </div>
+<!-- To-Do List -->
+<div class="section searchable">
+  <h2>📝 To-Do List</h2>
+  <input id="todoInput" type="text" placeholder="Add new task">
+  <button onclick="addTask()">Add</button>
+  <ul id="todoList"></ul>
+</div>
+  
+
+
+  <div class="section searchable">
+  <h2>🎲 Fun Fact Generator</h2>
+  <p id="funFact">Click for a random fact!</p>
+  <button onclick="showFact()">Show Fact</button>
+</div>
+
+
 
   <!-- Unit Converter -->
   <div class="section searchable">
@@ -406,9 +479,18 @@
 
   </main>
 
-  <footer>
-    <p>💡 Pocket Helper – Your everyday assistant | Built with ❤️</p>
-  </footer>
+<footer>
+  <p>💡 Pocket Helper – Your everyday assistant | Built with ❤️</p>
+  <div class="footer-links">
+    <a href="#" target="_blank">🌐 Website</a>
+    <a href="mailto:info@pockethelper.com">📧 Email</a>
+    <a href="https://wa.me/1234567890" target="_blank">📱 WhatsApp</a>
+    <a href="#" target="_blank">🐦 Twitter</a>
+    <a href="#" target="_blank">📸 Instagram</a>
+    <a href="#" target="_blank">💼 LinkedIn</a>
+  </div>
+</footer>
+
 
   <!-- Modal & Overlay -->
   <div id="overlay"></div>
@@ -422,11 +504,98 @@
 
   <script>
 
-    function updateDashboard() {
-  document.getElementById('dashboardHealth').innerText = localStorage.getItem("healthLog") || "No logs yet";
-  document.getElementById('dashboardNotes').innerText = localStorage.getItem("notes") || "No notes yet";
-  // Show a random motivational quote
-  document.getElementById('dashboardQuote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+function updateDashboard(){
+    document.getElementById('dashboardHealth').innerText = localStorage.getItem("healthLog")||"No logs yet";
+    document.getElementById('dashboardNotes').innerText = localStorage.getItem("notes")||"No notes yet";
+    const quotes=["🌟 Believe you can.","💪 Push yourself.","🚀 Dream it.","🔥 Don’t stop until proud."];
+    document.getElementById('dashboardQuote').innerText = quotes[Math.floor(Math.random()*quotes.length)];
+  }
+    // Pomodoro Timer
+  let pomodoroTime=1500, pomInterval;
+  function startPomodoro(){ if(pomInterval) return; pomInterval=setInterval(()=>{pomodoroTime--; let m=Math.floor(pomodoroTime/60), s=pomodoroTime%60; document.getElementById("pomodoroTimer").innerText=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; if(pomodoroTime<=0){ clearInterval(pomInterval); pomInterval=null; alert("Pomodoro Complete! 🎉"); } },1000);}
+  function pausePomodoro(){ clearInterval(pomInterval); pomInterval=null; }
+  function resetPomodoro(){ clearInterval(pomInterval); pomInterval=null; pomodoroTime=1500; document.getElementById("pomodoroTimer").innerText="25:00"; }
+
+  // BMI Calculator
+  function calculateBMI(){
+    let w=+document.getElementById("weight").value,h=+document.getElementById("height").value/100;
+    if(!w||!h) return alert("Enter weight & height!");
+    let bmi=(w/(h*h)).toFixed(1);
+    document.getElementById("bmiResult").innerText="Your BMI: "+bmi;
+  }
+
+  // Countdown Timer
+  let countdownInterval;
+  function setCountdown(){
+    let d=new Date(document.getElementById("eventDate").value);
+    if(!d) return alert("Select date!");
+    clearInterval(countdownInterval);
+    countdownInterval=setInterval(()=>{
+      let now=new Date(), diff=d-now;
+      if(diff<=0){ clearInterval(countdownInterval); document.getElementById("countdownTimer").innerText="Event Started! 🎉"; return; }
+      let days=Math.floor(diff/1000/60/60/24), h=Math.floor(diff/1000/60/60)%24, m=Math.floor(diff/1000/60)%60, s=Math.floor(diff/1000)%60;
+      document.getElementById("countdownTimer").innerText=`${days}d ${h}h ${m}m ${s}s remaining`;
+    },1000);
+  }
+
+  // Voice Notes
+  let recognition;
+  function startVoiceNote(){
+    if(!('webkitSpeechRecognition' in window)) return alert("Voice not supported!");
+    recognition=new webkitSpeechRecognition();
+    recognition.continuous=true; recognition.interimResults=false; recognition.lang='en-US';
+    recognition.onresult=(e)=>document.getElementById("voiceNoteText").value+=e.results[e.results.length-1][0].transcript;
+    recognition.start();
+  }
+  function stopVoiceNote(){ if(recognition) recognition.stop(); }
+
+    //weather
+    function showWeather() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const { latitude, longitude } = pos.coords;
+      document.getElementById("weatherInfo").innerText =
+        `📍 Approx. Location: ${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+    });
+  } else {
+    alert("Geolocation not supported!");
+  }
+}
+
+    //todo list
+function addTask() {
+  const input = document.getElementById("todoInput");
+  if (!input.value.trim()) return alert("Enter a task!");
+  const li = document.createElement("li");
+  li.textContent = input.value;
+  li.onclick = () => li.remove();
+  document.getElementById("todoList").appendChild(li);
+  input.value = "";
+}
+    //affirmation
+    const affirmations = [
+  "You are capable of amazing things 💪",
+  "Today is a new beginning 🌈",
+  "You are stronger than you think 💖",
+  "You attract positive energy 🌻"
+];
+function showAffirmation() {
+  document.getElementById("affirmationText").innerText =
+    affirmations[Math.floor(Math.random() * affirmations.length)];
+}
+//calander
+    document.getElementById("calendarDate").innerText =
+  new Date().toDateString();
+//funfact
+const facts = [
+  "Bananas are berries, but strawberries aren’t! 🍌",
+  "Honey never spoils 🍯",
+  "Your brain has about 86 billion neurons 🧠",
+  "Octopuses have three hearts 🐙"
+];
+function showFact() {
+  document.getElementById("funFact").innerText =
+    facts[Math.floor(Math.random() * facts.length)];
 }
 
     // 🔐 Validate Login Form
